@@ -9,7 +9,7 @@ const path = require("path");
 
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");//helps in creating a template or a layout like navbar or footer
-const ExpressError = require("./utils/Expresserror.js");
+const ExpressError = require("./utils/ExpressError.js");
 
 
 const session = require("express-session");
