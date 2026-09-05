@@ -1,0 +1,278 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .profile-container {
+    max-width: 1100px;
+    margin: 2rem auto;
+  }
+
+  .profile-header-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+
+  .profile-avatar {
+    width: 85px;
+    height: 85px;
+    background: #fe424d;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: 700;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(254, 66, 77, 0.3);
+  }
+
+  .stat-badge {
+    background: white;
+    border-radius: 1rem;
+    padding: 1rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    min-width: 130px;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #222;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #717171;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .nav-pills .nav-link {
+    color: #555;
+    border-radius: 30px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+
+  .nav-pills .nav-link.active {
+    background-color: #222;
+    color: white;
+  }
+
+  .listing-manage-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #e9ecef;
+  }
+
+  .listing-manage-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  }
+
+  .listing-manage-img {
+    height: 12rem;
+    width: 100%;
+    object-fit: cover;
+  }
+</style>
+
+<div class="profile-container">
+  <!-- Profile Header Card -->
+  <div class="profile-header-card">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
+      <div class="d-flex align-items-center gap-4">
+        <div class="profile-avatar">
+          <%= user.username ? user.username.charAt(0).toUpperCase() : 'U' %>
+        </div>
+        <div>
+          <h2 class="fw-bold mb-1"><%= user.username %></h2>
+          <p class="text-muted mb-1"><i class="fa-regular fa-envelope me-2"></i><%= user.email %></p>
+          <span class="badge bg-light text-dark border px-3 py-1 rounded-pill">
+            <i class="fa-regular fa-calendar-check me-1"></i>Joined <%= new Date(user.createdAt || Date.now()).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' }) %>
+          </span>
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div class="d-flex gap-3 flex-wrap">
+        <div class="stat-badge">
+          <div class="stat-number"><%= hostedListings.length %></div>
+          <div class="stat-label">Hosted Places</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-number"><%= bookings.length %></div>
+          <div class="stat-label">Trips Booked</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-number"><%= favorites.length %></div>
+          <div class="stat-label">Saved Stays</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Tabs Navigation -->
+  <ul class="nav nav-pills mb-4 gap-2" id="profileTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="hosted-tab" data-bs-toggle="pill" data-bs-target="#hosted" type="button" role="tab">
+        <i class="fa-solid fa-house-chimney me-2"></i>My Listings (<%= hostedListings.length %>)
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="bookings-tab" data-bs-toggle="pill" data-bs-target="#profile-bookings" type="button" role="tab">
+        <i class="fa-solid fa-suitcase-rolling me-2"></i>My Bookings (<%= bookings.length %>)
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="wishlist-tab" data-bs-toggle="pill" data-bs-target="#profile-wishlist" type="button" role="tab">
+        <i class="fa-solid fa-heart me-2"></i>My Wishlist (<%= favorites.length %>)
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab Content Panels -->
+  <div class="tab-content" id="profileTabsContent">
+    <!-- 1. Hosted Listings Tab -->
+    <div class="tab-pane fade show active" id="hosted" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Listings You're Hosting</h4>
+        <a href="/listings/new" class="btn btn-dark rounded-pill px-3">
+          <i class="fa-solid fa-plus me-1"></i>Add New Listing
+        </a>
+      </div>
+
+      <% if (hostedListings.length === 0) { %>
+        <div class="text-center py-5 bg-light rounded-4">
+          <i class="fa-solid fa-house-chimney fa-3x text-muted mb-3"></i>
+          <h5>You haven't listed any properties yet</h5>
+          <p class="text-muted">Earn extra income and share your beautiful home with travelers from around the world.</p>
+          <a href="/listings/new" class="btn btn-dark rounded-pill px-4">Airbnb your home</a>
+        </div>
+      <% } else { %>
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+          <% for(let listing of hostedListings) { %>
+            <div class="col">
+              <div class="card listing-manage-card shadow-sm h-100">
+                <a href="/listings/<%= listing._id %>">
+                  <img src="<%= listing.image ? listing.image.url : '' %>" class="listing-manage-img" alt="<%= listing.title %>">
+                </a>
+                <div class="card-body p-3 d-flex flex-column justify-content-between">
+                  <div>
+                    <h6 class="fw-bold mb-1 text-truncate"><%= listing.title %></h6>
+                    <p class="text-muted small mb-2"><%= listing.location %>, <%= listing.country %></p>
+                    <p class="fw-semibold mb-2">₹<%= listing.price.toLocaleString('en-IN') %> <span class="text-muted fw-normal small">/ night</span></p>
+                  </div>
+                  <div class="d-flex gap-2 pt-2 border-top">
+                    <a href="/listings/<%= listing._id %>/edit" class="btn btn-sm btn-outline-dark rounded-pill flex-grow-1">
+                      <i class="fa-regular fa-pen-to-square me-1"></i>Edit
+                    </a>
+                    <a href="/listings/<%= listing._id %>" class="btn btn-sm btn-outline-secondary rounded-pill flex-grow-1">
+                      <i class="fa-regular fa-eye me-1"></i>View
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- 2. Bookings Tab -->
+    <div class="tab-pane fade" id="profile-bookings" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Your Reservation History</h4>
+        <a href="/bookings" class="btn btn-outline-dark rounded-pill px-3">
+          Manage All Bookings
+        </a>
+      </div>
+
+      <% if (bookings.length === 0) { %>
+        <div class="text-center py-5 bg-light rounded-4">
+          <i class="fa-solid fa-suitcase-rolling fa-3x text-muted mb-3"></i>
+          <h5>No bookings yet</h5>
+          <p class="text-muted">Start exploring unique stays across the globe!</p>
+          <a href="/listings" class="btn btn-dark rounded-pill px-4">Explore stays</a>
+        </div>
+      <% } else { %>
+        <div class="list-group">
+          <% for(let b of bookings.slice(0, 5)) { %>
+            <div class="list-group-item list-group-item-action p-3 rounded-3 mb-2 border shadow-sm">
+              <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <div class="d-flex align-items-center gap-3">
+                  <% if (b.listing && b.listing.image && b.listing.image.url) { %>
+                    <img src="<%= b.listing.image.url %>" style="width: 65px; height: 65px; object-fit: cover; border-radius: 10px;" alt="">
+                  <% } %>
+                  <div>
+                    <h6 class="fw-bold mb-1">
+                      <% if(b.listing) { %>
+                        <a href="/listings/<%= b.listing._id %>" class="text-decoration-none text-dark"><%= b.listing.title %></a>
+                      <% } else { %>
+                        Listing Unavailable
+                      <% } %>
+                    </h6>
+                    <p class="text-muted small mb-0">
+                      <%= new Date(b.checkIn).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) %> - 
+                      <%= new Date(b.checkOut).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %> • 
+                      <%= b.guests %> guest<%= b.guests > 1 ? 's' : '' %>
+                    </p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="fw-bold mb-1">₹<%= b.totalPrice.toLocaleString('en-IN') %></div>
+                  <% if (b.status === 'confirmed') { %>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">Confirmed</span>
+                  <% } else { %>
+                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill">Cancelled</span>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- 3. Wishlist Tab -->
+    <div class="tab-pane fade" id="profile-wishlist" role="tabpanel">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">Saved Stays</h4>
+        <a href="/wishlist" class="btn btn-outline-dark rounded-pill px-3">
+          View Full Wishlist
+        </a>
+      </div>
+
+      <% if (favorites.length === 0) { %>
+        <div class="text-center py-5 bg-light rounded-4">
+          <i class="fa-regular fa-heart fa-3x text-muted mb-3"></i>
+          <h5>No saved places yet</h5>
+          <p class="text-muted">Click the heart icon on any stay to save it here for later.</p>
+          <a href="/listings" class="btn btn-dark rounded-pill px-4">Browse stays</a>
+        </div>
+      <% } else { %>
+        <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+          <% for(let listing of favorites.slice(0, 6)) { %>
+            <div class="col">
+              <div class="card listing-manage-card shadow-sm h-100">
+                <a href="/listings/<%= listing._id %>">
+                  <img src="<%= listing.image ? listing.image.url : '' %>" class="listing-manage-img" alt="<%= listing.title %>">
+                </a>
+                <div class="card-body p-3">
+                  <h6 class="fw-bold mb-1 text-truncate"><%= listing.title %></h6>
+                  <p class="text-muted small mb-2"><%= listing.location %>, <%= listing.country %></p>
+                  <p class="fw-semibold mb-0">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : 0 %> <span class="text-muted fw-normal small">/ night</span></p>
+                </div>
+              </div>
+            </div>
+          <% } %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>

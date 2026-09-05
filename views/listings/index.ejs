@@ -1,169 +1,372 @@
 <% layout("/layouts/boilerplate") %>
 
 <style>
-  #filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 2.5rem;
-  padding: 0.5rem 0;
-  margin-top: 1.8rem;
-
-}
-
-.filter {
-  text-align: center;
-  opacity: 0.7;
-  transition: all 0.2s ease;
-  flex: 0 0 auto;
-}
-
-.filter:hover {
-  opacity: 1;
-  transform: translateY(-2px);
-  cursor: pointer;
-}
-
-.filter p {
-  font-size: 0.75rem;
-  margin: 0;
-}
-
-.filter i {
-  font-size: 1.2rem;
-}
-
-.tax-toggle {
-  margin-left: auto;
-  border: 1px solid #ddd;
-  border-radius: 30px;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  background: #fff;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-}
-.tax-info {
-  display: none;
-}
-
-@media (max-width: 576px) {
-  #filters {
+  #filters-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 1rem;
-    overflow-x: auto;
-    flex-wrap: nowrap;
+    margin-top: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.8rem;
   }
 
-  .tax-toggle {
+  #filters {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.5rem 0.2rem;
+  }
+
+  #filters::-webkit-scrollbar {
     display: none;
   }
 
-  .filter p {
-    font-size: 0.7rem;
+  .filter-link {
+    text-decoration: none;
+    color: #555;
+    transition: all 0.2s ease;
   }
 
-}
+  .filter {
+    text-align: center;
+    opacity: 0.65;
+    transition: all 0.2s ease;
+    flex: 0 0 auto;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid transparent;
+  }
+
+  .filter:hover, .filter-link.active .filter {
+    opacity: 1;
+    cursor: pointer;
+    border-bottom: 2px solid #222;
+    color: #222;
+  }
+
+  .filter p {
+    font-size: 0.75rem;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .filter i {
+    font-size: 1.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .controls-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 1.2rem 0;
+  }
+
+  .tax-toggle {
+    border: 1px solid #ddd;
+    border-radius: 30px;
+    padding: 0.45rem 1rem;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    font-size: 0.88rem;
+  }
+
+  .tax-info {
+    display: none;
+    color: #717171;
+  }
+
+  /* Card enhancements */
+  .card-img-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: 1rem;
+  }
+
+  .favorite-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.15s ease, background-color 0.2s ease;
+    z-index: 2;
+  }
+
+  .favorite-btn:hover {
+    transform: scale(1.1);
+    background: #ffffff;
+  }
+
+  .favorite-btn i {
+    font-size: 1.1rem;
+    color: #717171;
+    transition: color 0.15s ease;
+  }
+
+  .favorite-btn.favorited i {
+    color: #fe424d;
+  }
+
+  .category-badge-chip {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.65);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 12px;
+    backdrop-filter: blur(2px);
+  }
+
+  .rating-badge {
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .empty-state-card {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #f8f9fa;
+    border-radius: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  @media (max-width: 768px) {
+    #filters-container {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
 </style>
-    <div id="filters" >
-      <div class="filter ">
-         <div><i class="fa-solid fa-fire"></i></div>
-         <p>Trending</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-bed"></i></div>
-         <p>Rooms</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-mountain-city"></i></div>
-         <p>Iconic cities</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-mountain"></i></div>
-         <p>Mountains</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-brands fa-fort-awesome"></i></div>
-         <p>Castle</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-person-swimming"></i></div>
-         <p>Amazing pools</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-campground"></i></div>
-         <p>Camping</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-cow"></i></div>
-         <p>Farms</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-regular fa-snowflake "></i></div>
-         <p>Arctic</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-igloo"></i></div>
-         <p>Domes</p>
-      </div>
-      <div class="filter">
-         <div><i class="fa-solid fa-ship "></i></div>
-         <p>Boats</p>
-      </div>
 
-      <div class="tax-toggle">
-        <div class="form-check-reverse form-switch">
-  <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault"/>
-  <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
-</div>
-      </div>
-    </div>
+<%
+  const categoriesList = [
+    { name: "Trending", icon: "fa-solid fa-fire" },
+    { name: "Rooms", icon: "fa-solid fa-bed" },
+    { name: "Iconic cities", icon: "fa-solid fa-mountain-city" },
+    { name: "Mountains", icon: "fa-solid fa-mountain" },
+    { name: "Castles", icon: "fa-brands fa-fort-awesome" },
+    { name: "Amazing pools", icon: "fa-solid fa-person-swimming" },
+    { name: "Camping", icon: "fa-solid fa-campground" },
+    { name: "Farms", icon: "fa-solid fa-cow" },
+    { name: "Arctic", icon: "fa-regular fa-snowflake" },
+    { name: "Domes", icon: "fa-solid fa-igloo" },
+    { name: "Boats", icon: "fa-solid fa-ship" },
+  ];
+%>
 
-
- <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
-
-<% for(let listing of allListings){ %>
-
-  <div class="col mb-4">
-    <a href="/listings/<%= listing._id %>" class="listing-link">
-
-      <div class="card listing-card h-100">
-
-        <img 
-          src="<%= listing.image.url %>" 
-          class="card-img-top" 
-          alt="listing_image"
-          style="height: 20rem; object-fit: cover;"
-        />
-
-        <div class="card-body">
-          <p class="card-text">
-            <b><%= listing.title %></b> <br>
-            ₹<%= listing.price.toLocaleString('en-IN') %> / night
-            <i class="tax-info"> +18% GST</i>
-          </p>
+<div id="filters-container">
+  <div id="filters">
+    <% for(let cat of categoriesList) { %>
+      <a href="/listings?category=<%= encodeURIComponent(cat.name) %><%= search ? '&search=' + encodeURIComponent(search) : '' %><%= sort ? '&sort=' + sort : '' %>" 
+         class="filter-link <%= category === cat.name ? 'active' : '' %>">
+        <div class="filter">
+          <div><i class="<%= cat.icon %>"></i></div>
+          <p><%= cat.name %></p>
         </div>
+      </a>
+    <% } %>
+  </div>
+</div>
 
-      </div>
+<!-- Controls Bar: Results Count, Active Filters, Sorting, Tax Toggle -->
+<div class="controls-bar">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <span class="text-muted fw-semibold">
+      <%= allListings.length %> stay<%= allListings.length === 1 ? '' : 's' %> found
+    </span>
 
-    </a>
+    <% if (category) { %>
+      <span class="badge bg-dark rounded-pill px-3 py-2 d-flex align-items-center gap-2">
+        <span>Category: <%= category %></span>
+        <a href="/listings<%= search ? '?search=' + encodeURIComponent(search) : '' %><%= sort ? (search ? '&' : '?') + 'sort=' + sort : '' %>" class="text-white text-decoration-none">
+          <i class="fa-solid fa-xmark"></i>
+        </a>
+      </span>
+    <% } %>
+
+    <% if (search) { %>
+      <span class="badge bg-secondary rounded-pill px-3 py-2 d-flex align-items-center gap-2">
+        <span>"<%= search %>"</span>
+        <a href="/listings<%= category ? '?category=' + encodeURIComponent(category) : '' %><%= sort ? (category ? '&' : '?') + 'sort=' + sort : '' %>" class="text-white text-decoration-none">
+          <i class="fa-solid fa-xmark"></i>
+        </a>
+      </span>
+    <% } %>
+
+    <% if (category || search) { %>
+      <a href="/listings" class="btn btn-sm btn-outline-secondary rounded-pill">Clear all</a>
+    <% } %>
   </div>
 
+  <div class="d-flex align-items-center gap-3 ms-auto">
+    <!-- Sort Options -->
+    <div class="dropdown">
+      <button class="btn btn-sm btn-outline-dark rounded-pill dropdown-toggle px-3 py-2" type="button" data-bs-toggle="dropdown">
+        <i class="fa-solid fa-arrow-down-short-wide me-1"></i>
+        Sort: 
+        <% if (sort === 'price_asc') { %> Price: Low to High
+        <% } else if (sort === 'price_desc') { %> Price: High to Low
+        <% } else { %> Newest
+        <% } %>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-3">
+        <li><a class="dropdown-item <%= !sort || sort === 'newest' ? 'active' : '' %>" href="/listings?sort=newest<%= category ? '&category=' + encodeURIComponent(category) : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>">Newest</a></li>
+        <li><a class="dropdown-item <%= sort === 'price_asc' ? 'active' : '' %>" href="/listings?sort=price_asc<%= category ? '&category=' + encodeURIComponent(category) : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>">Price: Low to High</a></li>
+        <li><a class="dropdown-item <%= sort === 'price_desc' ? 'active' : '' %>" href="/listings?sort=price_desc<%= category ? '&category=' + encodeURIComponent(category) : '' %><%= search ? '&search=' + encodeURIComponent(search) : '' %>">Price: High to Low</a></li>
+      </ul>
+    </div>
+
+    <!-- Tax Switch Toggle -->
+    <div class="tax-toggle">
+      <div class="form-check-reverse form-switch m-0">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault"/>
+        <label class="form-check-label" for="switchCheckDefault">Display taxes</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% if(allListings.length === 0) { %>
+  <div class="empty-state-card shadow-sm">
+    <i class="fa-solid fa-map-location-dot fa-3x text-muted mb-3"></i>
+    <h3>No listings found</h3>
+    <p class="text-muted">We couldn't find any stays matching your selected criteria.</p>
+    <a href="/listings" class="btn btn-dark rounded-pill px-4 mt-2">
+      <i class="fa-solid fa-arrows-rotate me-2"></i>Reset all filters
+    </a>
+  </div>
+<% } else { %>
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-2">
+    <% for(let listing of allListings){ %>
+      <div class="col mb-4">
+        <div class="card listing-card h-100">
+          <div class="card-img-wrapper">
+            <a href="/listings/<%= listing._id %>" class="listing-link">
+              <img 
+                src="<%= listing.image.url %>" 
+                class="card-img-top" 
+                alt="listing_image"
+                style="height: 20rem; object-fit: cover;"
+              />
+            </a>
+
+            <!-- Favorite Heart Toggle -->
+            <button 
+              type="button" 
+              class="favorite-btn <%= userFavorites.includes(listing._id.toString()) ? 'favorited' : '' %>" 
+              data-id="<%= listing._id %>" 
+              title="<%= userFavorites.includes(listing._id.toString()) ? 'Remove from wishlist' : 'Add to wishlist' %>"
+              onclick="toggleWishlist(event, '<%= listing._id %>')"
+            >
+              <i class="<%= userFavorites.includes(listing._id.toString()) ? 'fa-solid fa-heart' : 'fa-regular fa-heart' %>"></i>
+            </button>
+
+            <% if (listing.category) { %>
+              <span class="category-badge-chip">
+                <%= listing.category %>
+              </span>
+            <% } %>
+          </div>
+
+          <a href="/listings/<%= listing._id %>" class="listing-link text-dark">
+            <div class="card-body pt-2">
+              <div class="d-flex justify-content-between align-items-start">
+                <p class="card-text mb-1">
+                  <b><%= listing.title %></b>
+                </p>
+                <div class="rating-badge text-nowrap ms-2">
+                  <% if (listing.avgRating) { %>
+                    <i class="fa-solid fa-star text-warning"></i> <%= listing.avgRating %> 
+                    <span class="text-muted fw-normal fs-6">(<%= listing.reviewCount %>)</span>
+                  <% } else { %>
+                    <span class="text-muted fw-normal fs-6">★ New</span>
+                  <% } %>
+                </div>
+              </div>
+              <p class="text-muted small mb-1"><%= listing.location %>, <%= listing.country %></p>
+              <p class="card-text mb-0">
+                <b>₹<%= listing.price.toLocaleString('en-IN') %></b> <span class="text-muted font-light">/ night</span>
+                <i class="tax-info"> &nbsp;+18% GST</i>
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    <% } %>
+  </div>
 <% } %>
 
-</div>
-    
 <script>
+  // Tax switch toggle logic
   let taxSwitch = document.getElementById("switchCheckDefault");
-  taxSwitch.addEventListener("click",()=>{
-    let taxInfo = document.getElementsByClassName("tax-info");
-    for(info of taxInfo){
-      if(info.style.display != "inline"){
-      info.style.display = "inline";//one time effect
-      } else{
-        info.style.display = "none";
+  if (taxSwitch) {
+    taxSwitch.addEventListener("click", () => {
+      let taxInfo = document.getElementsByClassName("tax-info");
+      for (let info of taxInfo) {
+        info.style.display = (info.style.display !== "inline") ? "inline" : "none";
       }
+    });
+  }
+
+  // Wishlist AJAX toggle function
+  async function toggleWishlist(event, listingId) {
+    event.preventDefault();
+    event.stopPropagation();
+    const btn = event.currentTarget;
+    const icon = btn.querySelector("i");
+
+    try {
+      const response = await fetch(`/listings/${listingId}/favorite`, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        if (data.isFavorited) {
+          btn.classList.add("favorited");
+          icon.className = "fa-solid fa-heart";
+          btn.title = "Remove from wishlist";
+        } else {
+          btn.classList.remove("favorited");
+          icon.className = "fa-regular fa-heart";
+          btn.title = "Add to wishlist";
+        }
+      }
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+      // Fallback form post
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = `/listings/${listingId}/favorite`;
+      document.body.appendChild(form);
+      form.submit();
     }
-  })
+  }
 </script>
-
-

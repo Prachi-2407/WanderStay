@@ -119,7 +119,30 @@ body {
     padding-right:0 ;
 }
 #map{
-    height:400px;
+    height:360px;
     width:100%;
-    border-radius:10px;
+    border-radius:14px;
+}
+
+/* Card hover animation */
+.listing-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.listing-card:hover {
+    transform: translateY(-4px);
+}
+
+.dropdown-menu {
+    border-radius: 1rem !important;
+}
+
+.btn-dark {
+    background-color: #222222 !important;
+    border-color: #222222 !important;
+}
+
+.btn-dark:hover {
+    background-color: #000000 !important;
+    border-color: #000000 !important;
 }

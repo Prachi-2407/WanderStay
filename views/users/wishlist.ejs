@@ -1,0 +1,118 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  .wishlist-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+  }
+
+  .wishlist-card {
+    border: none;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .wishlist-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .wishlist-img-wrapper {
+    position: relative;
+    height: 14rem;
+    overflow: hidden;
+  }
+
+  .wishlist-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
+  }
+
+  .remove-fav-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fe424d;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  }
+
+  .empty-wishlist {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: #f8f9fa;
+    border-radius: 1.5rem;
+    margin: 2rem 0;
+  }
+</style>
+
+<div class="wishlist-container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h2 class="fw-bold mb-1"><i class="fa-solid fa-heart text-danger me-2"></i>My Wishlist</h2>
+      <p class="text-muted mb-0"><%= favorites.length %> saved stay<%= favorites.length === 1 ? '' : 's' %></p>
+    </div>
+    <a href="/listings" class="btn btn-outline-dark rounded-pill px-3">
+      <i class="fa-solid fa-compass me-1"></i>Explore more stays
+    </a>
+  </div>
+
+  <% if (favorites.length === 0) { %>
+    <div class="empty-wishlist shadow-sm">
+      <i class="fa-regular fa-heart fa-4x text-muted mb-3"></i>
+      <h3>Your wishlist is empty</h3>
+      <p class="text-muted">Explore wonderful places to stay and click the heart icon to save them to your wishlist.</p>
+      <a href="/listings" class="btn btn-dark rounded-pill px-4 mt-2">Start Exploring</a>
+    </div>
+  <% } else { %>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 g-4">
+      <% for(let listing of favorites) { %>
+        <div class="col">
+          <div class="card wishlist-card shadow-sm h-100">
+            <div class="wishlist-img-wrapper">
+              <a href="/listings/<%= listing._id %>">
+                <img src="<%= listing.image ? listing.image.url : '' %>" class="wishlist-img" alt="<%= listing.title %>">
+              </a>
+              <form method="POST" action="/listings/<%= listing._id %>/favorite">
+                <button type="submit" class="remove-fav-btn" title="Remove from wishlist">
+                  <i class="fa-solid fa-heart"></i>
+                </button>
+              </form>
+            </div>
+            <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  <h6 class="fw-bold mb-0 text-truncate" style="max-width: 70%;"><%= listing.title %></h6>
+                  <span class="small fw-semibold">
+                    <% if (listing.avgRating) { %>
+                      <i class="fa-solid fa-star text-warning"></i> <%= listing.avgRating %>
+                    <% } else { %>
+                      <span class="text-muted">★ New</span>
+                    <% } %>
+                  </span>
+                </div>
+                <p class="text-muted small mb-2"><%= listing.location %>, <%= listing.country %></p>
+                <p class="card-text mb-0">
+                  <span class="fw-bold">₹<%= listing.price ? listing.price.toLocaleString('en-IN') : 0 %></span>
+                  <span class="text-muted small"> / night</span>
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+</div>
